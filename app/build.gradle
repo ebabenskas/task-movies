@@ -1,0 +1,52 @@
+apply plugin: 'com.android.application'
+
+def loadKey(String property){
+    Properties properties = new Properties()
+    def fileCheck = new File("app/config.properties")
+    if (!fileCheck.exists()) return '"missingKeyFile"'
+    properties.load(new FileInputStream(fileCheck))
+    return "\"" + properties.getProperty(property) +"\""
+}
+
+
+android {
+    compileSdkVersion 27
+    dataBinding.enabled = true
+    defaultConfig {
+        applicationId "com.task.movies"
+        minSdkVersion 15
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        debug{
+            buildConfigField "String", "MOVIE_DB_API_KEY", loadKey("movieDbKey")
+        }
+        release {
+            buildConfigField "String", "MOVIE_DB_API_KEY", loadKey("movieDbKey")
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'at.blogc:expandabletextview:1.0.3'
+    implementation 'net.opacapp:multiline-collapsingtoolbar:1.3.1'
+    testImplementation 'junit:junit:4.12'
+}
